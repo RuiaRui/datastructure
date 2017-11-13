@@ -1,0 +1,6 @@
+&rc has the data type int but c has the type char,
+so they cannot be stored at the same place.
+ so &rc and &c cannot be compared.
+
+
+both &ri and i have the type int, so they can be compared.
