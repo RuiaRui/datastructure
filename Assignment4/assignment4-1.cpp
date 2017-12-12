@@ -1,0 +1,112 @@
+
+#include <stack>  
+#include <iostream>  
+
+using namespace std;
+
+struct BiTNode {
+	int data=0;
+	struct BiTNode *lChild, *rChild;//左右孩子  
+};
+
+class BiTree {
+private:
+	
+
+public:
+	BiTNode *root;
+
+
+	BiTNode * CreateBiTree();
+	
+	void NotReInOrder();
+
+	void PrintTree(BiTNode *T, int level);
+};
+
+
+//主函数  
+int main() {
+	BiTree *biTree = new BiTree();
+	cout << "创建一颗树，输入数据,用-1表示空树:" << endl;
+	biTree->root=biTree->CreateBiTree();
+
+	cout << "打印树" << endl;
+	biTree->PrintTree(biTree->root, 0);
+
+	cout << "中序非递归遍历：" << endl;
+	biTree->NotReInOrder();
+
+	system("pause");
+}
+
+
+//先序递归创建二叉树树  
+BiTNode * BiTree::CreateBiTree()
+{
+	int val;
+	BiTNode *current = new BiTNode();
+	cin >> val;
+
+	if (val == -1) {
+		return current=NULL;
+	}else
+	{
+		current = new BiTNode;//产生新的子树 
+		current->data = val;
+		current->lChild = CreateBiTree(); 
+		current->rChild = CreateBiTree();
+		return current;
+	}
+}
+
+//中序遍历非递归需要借助stack s来实现，模拟递归调用  
+//总的循环边界是当前节点不为空或者stack不空，  
+//@1 在当前节点p非空时候，将p入栈s,p的左子树赋给p,保证左子树都能入栈  
+//  p为空时候，也就是左子树最左边访问到了，这时候在栈非空的时候  
+//@2 取栈顶给p，输入p，出栈，这时候最底层的最左边节点访问了，将p的右子树赋给p，重复@1  
+
+void BiTree::NotReInOrder()
+{
+	//空树  
+	if (root == NULL)
+		return;
+	//树非空  
+	BiTNode* p = root;
+	stack<BiTNode*> s;
+	while (!s.empty() || p)
+	{
+		if (p)
+		{
+			s.push(p);
+			p = p->lChild;
+		}
+		else
+		{
+			p = s.top();
+			s.pop();
+			cout << p->data;
+			p = p->rChild;
+		}
+	}
+
+}
+//二叉树树状层次结构逆时针反转90度
+void BiTree::PrintTree(BiTNode * T, int level)
+{
+
+	if (!T)             //如果指针为空，返回上一层  
+	{
+		return;
+	}
+	PrintTree(T->rChild, level + 1);    //打印右子树，并将层次加1  
+	for (int i = 0; i<level; i++)    //按照递归的层次打印空格  
+	{
+		cout << "   ";
+	}
+	cout << T->data << "\n";  //输出根结点  
+	PrintTree(T->lChild, level + 1);    //打印左子树，并将层次加1 
+}
+
+
+
